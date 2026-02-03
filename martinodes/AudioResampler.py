@@ -21,8 +21,8 @@ class AudioResampler:
             },
         }
 
-    RETURN_TYPES = ("AUDIO")
-    RETURN_NAMES = ("audio")
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio",)
 
     SEARCH_ALIASES = ["resample audio"]
 
