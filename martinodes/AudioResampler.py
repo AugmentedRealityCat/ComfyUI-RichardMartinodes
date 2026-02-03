@@ -17,7 +17,7 @@ class AudioResampler:
             "required": {
                 "audio": ("AUDIO", {}),
                 "samplerate_hz" : ("INT", { "default" : 24000 }),
-                "channels" : ("INT", { "default" : 1 })
+                "channels" : ([1, 2], { "default" : 1 })
             },
         }
 
