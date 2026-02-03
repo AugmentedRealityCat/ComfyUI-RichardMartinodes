@@ -1,0 +1,11 @@
+[project]
+name = "martinodes"
+version = "1.0.1"
+description = "A collection of custom convenience and experimental nodes for ComfyUI"
+license = {text = "MIT license"}
+dependencies = ["numpy", "torch", "librosa"]
+
+[tool.comfy]
+PublisherId = "progmars"
+DisplayName = "ComfyUI-Martinodes"
+Icon = ""
