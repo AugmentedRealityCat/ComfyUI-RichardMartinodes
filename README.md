@@ -55,6 +55,7 @@ Makes audio to have the specified duration, cropping or padding with silence as 
 
 ### Concatenate media (MediaOverlappingConcatenator)
 Concatenates two videos and/or audios, applying overlapping logic (crossfade or simple join).
+If incoming audio channels or samplerates do not match, they will be resampled to the highest samplerate and channels of both audios.
 
 - **Inputs**: `images_1`, `audio_1`, `images_2`, `audio_2` (all optional, but need pairs to work meaningfully)
 - **Parameters**: 

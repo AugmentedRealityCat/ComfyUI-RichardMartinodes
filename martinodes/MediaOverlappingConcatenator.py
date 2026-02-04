@@ -1,4 +1,4 @@
-from .shared import CATEGORY
+from .shared import CATEGORY, resample_audio
 import torch
 
 class MediaOverlappingConcatenator:
@@ -17,8 +17,8 @@ class MediaOverlappingConcatenator:
             "required" : {
                 "video_fps" : ("FLOAT", { "default" : 24.0 }),
                 "overlap_duration_seconds" : ("FLOAT", { "default" : 0.0 }),
-                "video_overlap_prefer" : (["images_1", "images_2", "crossfade"], { "default" : "crossfade" }),
-                "audio_overlap_prefer" : (["audio_1", "audio_2", "crossfade"], { "default" : "crossfade" }),
+                "video_overlap_resolve" : (["images_1", "images_2", "crossfade"], { "default" : "crossfade" }),
+                "audio_overlap_resolve" : (["audio_1", "audio_2", "crossfade"], { "default" : "crossfade" }),
             },
         }
 
@@ -34,8 +34,8 @@ class MediaOverlappingConcatenator:
     def run(self,  **kwargs):
         overlap_duration_seconds = kwargs.get("overlap_duration_seconds", 0.0)
         video_fps = kwargs.get("video_fps", 24.0)
-        video_overlap_method = kwargs.get("video_overlap_prefer", "crossfade")
-        audio_overlap_method = kwargs.get("audio_overlap_prefer", "crossfade")
+        video_overlap_method = kwargs.get("video_overlap_resolve", "crossfade")
+        audio_overlap_method = kwargs.get("audio_overlap_resolve", "crossfade")
         
         frames_1 = kwargs.get("images_1", None)
         audio_1 = kwargs.get("audio_1", None)
@@ -80,10 +80,21 @@ class MediaOverlappingConcatenator:
         
         out_audio = None
         if audio_1 is not None and audio_2 is not None:
-            if audio_1["sample_rate"] != audio_2["sample_rate"]:
-                raise ValueError(f"Sample rates must match for audio concatenation. Got {audio_1['sample_rate']} and {audio_2['sample_rate']}")
+            sr1 = audio_1["sample_rate"]
+            sr2 = audio_2["sample_rate"]
+            target_sr = max(sr1, sr2)
             
-            sr = audio_1["sample_rate"]
+            chan1 = audio_1["waveform"].shape[1]
+            chan2 = audio_2["waveform"].shape[1]
+            target_channels = max(chan1, chan2)
+            
+            if sr1 != target_sr or chan1 != target_channels:
+                audio_1 = resample_audio(audio_1, target_sr, target_channels)
+            
+            if sr2 != target_sr or chan2 != target_channels:
+                audio_2 = resample_audio(audio_2, target_sr, target_channels)
+
+            sr = target_sr
             wave_1 = audio_1["waveform"]
             wave_2 = audio_2["waveform"]
             
