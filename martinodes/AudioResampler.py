@@ -16,7 +16,7 @@ class AudioResampler:
         return {
             "required": {
                 "audio": ("AUDIO", {}),
-                "samplerate_hz" : ("INT", { "default" : 24000 }),
+                "samplerate" : ("INT", { "default" : 24000 }),
                 "channels" : ([1, 2], { "default" : 1 })
             },
         }
@@ -32,7 +32,7 @@ class AudioResampler:
 
     def run(self,  **kwargs):
 
-        samplerate_hz = kwargs.get("samplerate_hz", 24000)
+        samplerate = kwargs.get("samplerate", 24000)
         channels = kwargs.get("channels", 1)        
         # ComfyUI AUDIO structure: {"waveform": tensor(batch, channels, samples), "sample_rate": int}
         audio = kwargs.get("audio", None)
@@ -61,9 +61,9 @@ class AudioResampler:
             # but usually it's safer to resample individual channels or rely on librosa's ability.
             
             # Let's resample first to keep the speed consistent for original channels
-            if orig_sr != samplerate_hz:
+            if orig_sr != samplerate:
                 # librosa.resample takes (..., n_samples)
-                item_resampled = librosa.resample(item_np, orig_sr=orig_sr, target_sr=samplerate_hz, axis=-1)
+                item_resampled = librosa.resample(item_np, orig_sr=orig_sr, target_sr=samplerate, axis=-1)
             else:
                 item_resampled = item_np
             
@@ -88,7 +88,7 @@ class AudioResampler:
 
         out_audio = {
             "waveform": out_tensor,
-            "sample_rate": samplerate_hz
+            "sample_rate": samplerate
         }
 
         return (out_audio,)
