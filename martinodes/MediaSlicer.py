@@ -12,7 +12,7 @@ class MediaSlicer:
                 "audio": ("AUDIO", {}),
             },
             "required" : {
-                "length_seconds" : ("FLOAT", { "default" : 0.0 }),
+                "duration_seconds" : ("FLOAT", { "default" : 0.0 }),
                 "video_fps" : ("FLOAT", { "default" : 24.0 }),
                 "take_from" : (["start", "end"], { "default" : "end" }),
             },
@@ -28,9 +28,9 @@ class MediaSlicer:
     DESCRIPTION = "Takes a slice with requested length from the start or the end of the loaded media. If using both audio and video, the inputs must be the same length."
 
     def run(self,  **kwargs):
-        length_seconds = kwargs.get("length_seconds", 0.0)
+        duration_seconds = kwargs.get("duration_seconds", 0.0)
         video_fps = kwargs.get("video_fps", 24.0)
-        take_from = kwargs.get("take_from", "start")
+        take_from = kwargs.get("take_from", "end")
         
         images = kwargs.get("images", None)
         audio = kwargs.get("audio", None)
@@ -38,11 +38,11 @@ class MediaSlicer:
         out_images = images
         out_audio = audio
 
-        if length_seconds < 0.001:
+        if duration_seconds < 0.001:
             return (out_images, out_audio)
 
         if images is not None:
-            frames_to_take = int(length_seconds * video_fps)
+            frames_to_take = int(duration_seconds * video_fps)
             out_images = list_head_tail(images, frames_to_take, take_from)
 
 
@@ -52,7 +52,7 @@ class MediaSlicer:
             waveform = audio["waveform"]
             sample_rate = audio["sample_rate"]
             
-            samples_to_take = int(length_seconds * sample_rate)
+            samples_to_take = int(duration_seconds * sample_rate)
 
             # permute the waveform to (samples, batch, channels) to slice accordingly.
             # This handles batch processing "vectorially" - by moving the time dimension to the front,
