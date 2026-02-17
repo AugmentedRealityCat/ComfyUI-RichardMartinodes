@@ -45,8 +45,6 @@ class MediaSlicer:
             frames_to_take = int(duration_seconds * video_fps)
             out_images = list_head_tail(images, frames_to_take, take_from)
 
-
-        # Process Audio
         if audio is not None:
             # ComfyUI AUDIO structure: {"waveform": tensor(batch, channels, samples), "sample_rate": int}
             waveform = audio["waveform"]

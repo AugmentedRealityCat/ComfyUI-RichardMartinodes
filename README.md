@@ -18,7 +18,7 @@ python -m pip install librosa
 
 ## Nodes
 
-### Video head or tail (MediaSlicer)
+### Media head or tail (MediaSlicer)
 Takes a slice with requested length from the start or the end of the loaded media. If using both audio and video, the inputs must be the same length.
 
 - **Inputs**: `images` (optional), `audio` (optional)
@@ -26,6 +26,15 @@ Takes a slice with requested length from the start or the end of the loaded medi
   - `duration_seconds`: Length of the slice to take.
   - `video_fps`: Frame rate for video calculation.
   - `take_from`: "start" or "end".
+
+### Trim media (MediaTrimmer)
+Trims video and/or audio from any end.
+
+- **Inputs**: `images` (optional), `audio` (optional)
+- **Parameters**: 
+  - `trim_seconds`: Amount of time to trim.
+  - `video_fps`: Frame rate for video calculation.
+  - `trim_from`: End to trim from ("start", "end").
 
 ### Audio info (AudioInfo)
 Retrieves information about the audio, passing the audio through for convenience.
