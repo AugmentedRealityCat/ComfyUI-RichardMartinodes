@@ -2,9 +2,16 @@
 
 Collection of convenience nodes to avoid long node chains and calculations in ComfyUI when working with videos and audios. Especially useful for extending/prefixing LTX2 videos.
 
+<img width="878" height="394" alt="image" src="https://github.com/user-attachments/assets/e257795f-29f9-4f00-b510-2674678c9d32" />
+
+
+## Installation
+
+You'll need a git client. Open your terminal or command window, navigate to your custom_nodes and run `git clone https://github.com/progmars/ComfyUI-Martinodes.git`
+
 ## Dependencies
 
-Ensure you have the required dependencies installed (mainly for audio operations):
+Depends on librosa for audio resampling operations:
 
 ```
 pip install librosa
