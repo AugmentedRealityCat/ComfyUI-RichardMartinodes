@@ -1,6 +1,11 @@
 import torch
 import numpy as np
-import librosa
+
+try:
+    # will ignore in case audio functions are never called
+    import librosa
+except ImportError:
+    pass
 
 CATEGORY = "martinodes"
 
