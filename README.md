@@ -78,15 +78,32 @@ If incoming audio channels or samplerates do not match, they will be resampled t
 - **Inputs**: `images_1`, `audio_1`, `images_2`, `audio_2` (all optional, but need pairs to work meaningfully)
 - **Parameters**: 
   - `overlap_duration_seconds`: Duration of the overlap/crossfade.
-  - `video_overlap_prefer`: How to handle video overlap ("crossfade", "images_1", "images_2").
-  - `audio_overlap_prefer`: How to handle audio overlap ("crossfade", "audio_1", "audio_2").
+  - `video_overlap_resolve`: How to handle video overlap ("crossfade", "images_1", "images_2").
+  - `audio_overlap_resolve`: How to handle audio overlap ("crossfade", "audio_1", "audio_2").
+
+### Concatenate video+audio latents (LatentOverlappingConcatenator)
+Concatenates two video+audio latents, applying overlapping logic (crossfade or simple join) similar to Concatenate media, but operating directly on latents instead of decoded video/audio.
+
+Currently supports MiniMax H3 only, but was developed with separated configurable parameters to port to other models if needed.
+
+The requested overlap duration is snapped to latent token counts using the same temporal compression rules as LatentAVMaskedExtender, so overlaps stay aligned with the model's token grid.
+
+- **Inputs**: `av_latent_1`, `av_latent_2` (both optional; if only one is provided, it is passed through unchanged)
+- **Parameters**: 
+  - `video_fps`: Frame rate used to calculate synchronized video and audio token lengths.
+  - `overlap_duration_seconds`: Duration of the overlap/crossfade. `0` performs a plain concatenation.
+  - `video_overlap_resolve`: How to handle the video overlap ("crossfade", "av_latent_1", "av_latent_2").
+  - `audio_overlap_resolve`: How to handle the audio overlap ("crossfade", "av_latent_1", "av_latent_2").
+- **Outputs**: `av_latent`
 
 ### Extend video+audio latent (LatentAVMaskedExtender)
 Extends a combined video+audio latent by using the requested duration from the head (prepend_head mode) or tail (extend_tail mode) of a loaded latent and using the remaining portion of an empty latent for generation.
 
+Currently supports MiniMax H3 only, but was developed with separated configurable parameters to port to other models if needed.
+
 The output latent can then be passed to the sampler for generating the remaining part. Just plug the node between `MiniMax H3 Reference to Video` or `MiniMax H3 Image to Video` or even `MiniMax H3 Easy Output` if using nkxx188/ComfyUI-MiniMaxH3-Easy, and your sampler.
 
-For convenience, the node accepts empty loaded_av. If missing, target_av will be passed through. Thus the node can be safely left enabled even when there are no latents saved yet to extend.
+For convenience, the node accepts empty loaded_av, in which case the target_av will be passed through. Thus the node can be safely left enabled even when using a disabled LoadAVLatent node as input.
 
 The implementation requires the latest ComfyUI with [native masking PR 15375](https://github.com/Comfy-Org/ComfyUI/pull/15375) merged.
 
@@ -95,7 +112,7 @@ The implementation requires the latest ComfyUI with [native masking PR 15375](ht
   - `loaded_av`: (optional) The loaded latent to use for head/tail overlapping.
 - **Parameters**:
   - `mode`: extend_tail or prepend_head
-  - `overlap_video_tail_seconds`: Duration of the loaded video tail to preserve. The tail will be overlapped onto the beginning of the target_av latent, thus total length of the video will not be changed.
+  - `overlap_duration_seconds`: Duration of the loaded video head/tail to preserve. The part will be overlapped onto the end/beginning of the target_av latent, thus total length of the video will not be changed.
   - `video_fps`: Frame rate used to calculate synchronized video and audio token lengths.
   - `video_fade_seconds` and `audio_fade_seconds`: To soften transitions. Higher values of 0.5 or more usually are needed for `prepend_head` mode.
   - `trim_freeze_tail` and `freeze_threshold`: Might help in cases when the latent ends with a frozen part (sometimes happens with FLF2V). WARNING: Not tested in action, so might be totally useless.
@@ -130,18 +147,16 @@ Saves a video+audio latent to the ComfyUI output directory as a `.avlatent` safe
   - `filename_prefix`: Output filename prefix, defaulting to `av_latents/latent` in ComfyUI `output` directory.
 
 ### Load video+audio latent (LoadAVLatent)
-Loads a previously saved `.avlatent` file. In contrast to other loaders that look for the latents in input/ folder only, this node loads from the ComfyUI output directory, thus enabling convenient roundtripping of saved latents.
+Loads a previously saved `.avlatent` file. In contrast to other loaders that look for the latents in input/ folder only, this node loads from the ComfyUI output directory and sorts by newest first, thus enabling convenient roundtripping of saved latents.
 
 The file list is refreshed from the output directory when the node input types are created. You can also refresh it by hitting R in ComfyUI. So, for convenient way of working, generate a video with SaveAVLatent enabled, hit R, select the freshly generated latent and it's ready to be extended.
-
-For convenience, it is possible to select "None" to skip extending, as LatentAVTailMaskedExtender accepts None as a pass-through signal. Or just bypass the node if don't want to extend a video this time.
 
 - **Inputs**: `file_path`
 - **Outputs**: `av_latent`
 
 
 ## History and acknowledgments
-There are lots of other long contex(t) nodes around that inspired me, but they often seemed overkill and not support my typical use cases well (seed + prompt hunting with low steps, regen with high steps, save latent, load latent, extend). 
+There are multiple other long context extension nodes around that inspired me, but they often seemed overkill and not support my typical use cases well (seed + prompt hunting with low steps, regen the found seed with high steps, save latent, load latent, extend, repeat). 
 
 Kudos to drozbay (ablejones) for [native masking PR 15375](https://github.com/Comfy-Org/ComfyUI/pull/15375) and providing the example implmenentation with native ComfyUI and Kijai nodes. Unfortunately, native nodes solution becomes like a spaghetti eating somebody alive. That is why this small naive LatentAVMaskedExtender node was born.
 

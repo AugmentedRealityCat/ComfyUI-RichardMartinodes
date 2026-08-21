@@ -1,12 +1,5 @@
-from .shared import CATEGORY
+from .shared import CATEGORY, MINIMAX_H3_PARAMS
 import torch
-
-MINIMAX_H3_PARAMS = {
-    "audio_token_rate": 40,
-    "frame_multi": 17.0,
-    "frame_offset": 5.0,
-    "min_latent_temporal_tokens": 2.0
-}
 
 class LatentAVMaskedExtender:
     def __init__(self):
@@ -18,7 +11,7 @@ class LatentAVMaskedExtender:
             "required": {
                 "target_av": ("LATENT", ),
                 "mode": (["extend_tail", "prepend_head"], {"default": "extend_tail"}),
-                "video_overlap_seconds": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 60.0, "step": 0.1}),
+                "overlap_duration_seconds": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 60.0, "step": 0.1}),
                 "video_fps": ("FLOAT", {"default": 24.0, "min": 1.0, "max": 120.0, "step": 1.0}),
                 "video_fade_seconds": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 60.0, "step": 0.1}),
                 "audio_fade_seconds": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 60.0, "step": 0.1}),
@@ -35,7 +28,7 @@ class LatentAVMaskedExtender:
     FUNCTION = "run"
     CATEGORY = CATEGORY
 
-    def run(self, target_av, mode, video_overlap_seconds, video_fps, video_fade_seconds, audio_fade_seconds, trim_freeze_tail, freeze_threshold, loaded_av=None):
+    def run(self, target_av, mode, overlap_duration_seconds, video_fps, video_fade_seconds, audio_fade_seconds, trim_freeze_tail, freeze_threshold, loaded_av=None):
         if loaded_av is None:
             return (target_av, )
 
@@ -45,7 +38,7 @@ class LatentAVMaskedExtender:
         frame_offset = params["frame_offset"]
         min_latent_temporal_tokens = params["min_latent_temporal_tokens"]
 
-        target_frames = video_overlap_seconds * video_fps
+        target_frames = overlap_duration_seconds * video_fps
         k = max(0, int(round((target_frames - frame_offset) / frame_multi)))
         snapped_video_frames = int(k * frame_multi + frame_offset)
         

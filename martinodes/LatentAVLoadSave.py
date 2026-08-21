@@ -51,27 +51,27 @@ class SaveAVLatent:
         return {"ui": {"text": f"Saved to {output_path}"}}
 
 
-# Define a sentinel value that sorts to the top of the dropdown
-# and lets unselect anything
-NONE_SELECTION = " [NONE]"
-
 def get_saved_latents():
     output_dir = folder_paths.get_output_directory()
-    files = [NONE_SELECTION]
-    
+    files = []
+
     if not os.path.exists(output_dir):
-        return files
-        
-    # Recursively scan the output directory for safetensors
+        return []
+
+    # Recursively scan the output directory for avlatents
     for root, _, filenames in os.walk(output_dir):
         for f in filenames:
             if f.endswith(".avlatent"):
+                full_path = os.path.join(root, f)
                 # Store paths relative to the output directory
-                rel_path = os.path.relpath(os.path.join(root, f), output_dir)
+                rel_path = os.path.relpath(full_path, output_dir)
                 # Normalize slashes for ComfyUI cross-platform consistency
-                files.append(rel_path.replace("\\", "/"))
-                
-    return sorted(files)
+                files.append((rel_path.replace("\\", "/"), os.path.getmtime(full_path)))
+
+    # Newest first
+    files.sort(key=lambda item: item[1], reverse=True)
+
+    return [f for f, _ in files]
 
 
 class LoadAVLatent:
@@ -88,14 +88,13 @@ class LoadAVLatent:
 
     def load(self, file_path):
         
-        # 1. Handle the explicit "None" selection or empty input
-        if not file_path or file_path == NONE_SELECTION:
+        if not file_path:
             return (None, )
 
-        # 2. Reconstruct path relative to the output directory
+        # Reconstruct path relative to the output directory
         target_path = os.path.join(folder_paths.get_output_directory(), file_path)
         
-        # 3. Fallback to absolute path if passed via converted string input widget
+        # Fallback to absolute path if passed via converted string input widget
         if not os.path.exists(target_path) and os.path.isabs(file_path):
             target_path = file_path
 

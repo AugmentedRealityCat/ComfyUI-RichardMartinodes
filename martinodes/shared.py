@@ -9,6 +9,14 @@ except ImportError:
 
 CATEGORY = "martinodes"
 
+MINIMAX_H3_PARAMS = {
+    "audio_token_rate": 40,
+    "frame_multi": 17.0,
+    "frame_offset": 5.0,
+    "min_latent_temporal_tokens": 2.0
+}
+
+
 def list_head_tail(list, take_count, start_end):
 
     total = list.shape[0]
