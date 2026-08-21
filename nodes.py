@@ -4,7 +4,7 @@ from .martinodes.AudioTrimExtender import AudioTrimExtender
 from .martinodes.AudioInfo import AudioInfo
 from .martinodes.MediaTrimmer import MediaTrimmer
 from .martinodes.MediaOverlappingConcatenator import MediaOverlappingConcatenator
-from .martinodes.LatentAVTailMaskedExtender import LatentAVTailMaskedExtender
+from .martinodes.LatentAVMaskedExtender import LatentAVMaskedExtender
 from .martinodes.LatentAVLoadSave import SaveAVLatent, LoadAVLatent
 
 NODE_CLASS_MAPPINGS = {
@@ -14,7 +14,7 @@ NODE_CLASS_MAPPINGS = {
     "MARMediaTrimmer": MediaTrimmer,
     "MARAudioInfo": AudioInfo,
     "MARMediaOverlappingConcatenator": MediaOverlappingConcatenator,
-    "LatentAVTailMaskedExtender": LatentAVTailMaskedExtender,
+    "LatentAVMaskedExtender": LatentAVMaskedExtender,
     "SaveAVLatent": SaveAVLatent,
     "LoadAVLatent": LoadAVLatent
 }
@@ -26,7 +26,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "MARMediaTrimmer": "Trim media",
     "MARAudioTrimExtender": "Ensure audio duration",
     "MARMediaOverlappingConcatenator": "Concatenate media",
-    "LatentAVTailMaskedExtender": "Extend video from latent tail",
+    "LatentAVMaskedExtender": "Extend video+audio latent",
     "SaveAVLatent": "Save video+audio latent",
     "LoadAVLatent": "Load video+audio latent"
 }
