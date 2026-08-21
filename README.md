@@ -139,6 +139,12 @@ Shot with ...
 The shot seamlessly continues into <Video 1> and <Audio 1>.
 ```
 
+### Combine video+audio latent (LatentAVCombiner)
+Combines a separate video latent and audio latent into a single MiniMax H3 compatible `av_latent`, ready to be used by other latent nodes or saved with SaveAVLatent.
+
+- **Inputs**: `video_latent`, `audio_latent`
+- **Outputs**: `av_latent`
+
 ### Save video+audio latent (SaveAVLatent)
 Saves a video+audio latent to the ComfyUI output directory as a `.avlatent` safetensors file.
 
