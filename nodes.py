@@ -2,12 +2,14 @@ from .martinodes.MediaSlicer import MediaSlicer
 from .martinodes.AudioResampler import AudioResampler
 from .martinodes.AudioTrimExtender import AudioTrimExtender
 from .martinodes.AudioInfo import AudioInfo
+from .martinodes.LatentAVInfo import LatentAVInfo
 from .martinodes.MediaTrimmer import MediaTrimmer
 from .martinodes.MediaOverlappingConcatenator import MediaOverlappingConcatenator
 from .martinodes.LatentAVMaskedExtender import LatentAVMaskedExtender
 from .martinodes.LatentAVLoadSave import SaveAVLatent, LoadAVLatent
 from .martinodes.LatentOverlappingConcatenator import LatentOverlappingConcatenator
 from .martinodes.LatentAVCombiner import LatentAVCombiner
+from .martinodes.LatentAVSplitter import LatentAVSplitter
 
 NODE_CLASS_MAPPINGS = {
     "MARMediaSlicer": MediaSlicer,
@@ -15,12 +17,14 @@ NODE_CLASS_MAPPINGS = {
     "MARAudioTrimExtender": AudioTrimExtender,
     "MARMediaTrimmer": MediaTrimmer,
     "MARAudioInfo": AudioInfo,
+    "LatentAVInfo": LatentAVInfo,
     "MARMediaOverlappingConcatenator": MediaOverlappingConcatenator,
     "LatentAVMaskedExtender": LatentAVMaskedExtender,
     "SaveAVLatent": SaveAVLatent,
     "LoadAVLatent": LoadAVLatent,
     "LatentOverlappingConcatenator": LatentOverlappingConcatenator,
-    "LatentAVCombiner": LatentAVCombiner
+    "LatentAVCombiner": LatentAVCombiner,
+    "LatentAVSplitter": LatentAVSplitter
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -29,10 +33,12 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "MARAudioResampler": "Resample audio",
     "MARMediaTrimmer": "Trim media",
     "MARAudioTrimExtender": "Ensure audio duration",
+    "LatentAVInfo": "Video+audio latent info",
     "MARMediaOverlappingConcatenator": "Concatenate media",
     "LatentAVMaskedExtender": "Extend video+audio latent",
     "SaveAVLatent": "Save video+audio latent",
     "LoadAVLatent": "Load video+audio latent",
     "LatentOverlappingConcatenator": "Concatenate video+audio latents",
-    "LatentAVCombiner": "Combine video+audio latent"
+    "LatentAVCombiner": "Combine video+audio latent",
+    "LatentAVSplitter": "Split video+audio latent"
 }

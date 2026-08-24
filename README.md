@@ -145,6 +145,23 @@ Combines a separate video latent and audio latent into a single MiniMax H3 compa
 - **Inputs**: `video_latent`, `audio_latent`
 - **Outputs**: `av_latent`
 
+### Split video+audio latent (LatentAVSplitter)
+Splits a combined `av_latent` into separate `video_latent` and `audio_latent`, useful when you want to process or inspect each stream independently.
+
+- **Inputs**: `av_latent`
+- **Outputs**: `video_latent`, `audio_latent`
+
+### Video+audio latent info (LatentAVInfo)
+Retrieves information from a combined `av_latent`, while also passing the original latent through for convenience in longer node chains.
+
+- **Inputs**: `av_latent`
+- **Outputs**:
+  - `av_latent`: Original input latent (passthrough).
+  - `frames`: Estimated number of video frames from latent token count.
+  - `video_resolution`: Video latent spatial resolution as `width x height`.
+  - `video_tokens`: Number of latent video temporal tokens.
+  - `audio_tokens`: Number of latent audio temporal tokens.
+
 ### Save video+audio latent (SaveAVLatent)
 Saves a video+audio latent to the ComfyUI output directory as a `.avlatent` safetensors file.
 
