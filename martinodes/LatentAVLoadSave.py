@@ -13,20 +13,22 @@ class SaveAVLatent:
     def INPUT_TYPES(s):
         return {"required": {
             "av_latent": ("LATENT", ),
-            "filename_prefix": ("STRING", {"default": "av_latents/latent"})
+            "filename_prefix": ("STRING", {"default": "av_latents/latent"}),
+            "video_filename_prefix": ("STRING", {"default": "video"})
         }}
 
-    RETURN_TYPES = ()
+    RETURN_TYPES = ("STRING", )
+    RETURN_NAMES = ("video_sync_latent_filename_prefix", )
     FUNCTION = "save"
     OUTPUT_NODE = True
     CATEGORY = CATEGORY
 
-    def save(self, av_latent, filename_prefix):
+    def save(self, av_latent, filename_prefix, video_filename_prefix):
         # Leverage ComfyUI API for standard subfolder, filename, and incrementing counter logic
         full_output_folder, filename, counter, subfolder, _ = folder_paths.get_save_image_path(
             filename_prefix, self.output_dir
         )
-        
+
         output_filename = f"{filename}_{counter:05d}.avlatent"
         output_path = os.path.join(full_output_folder, output_filename)
 
@@ -48,7 +50,11 @@ class SaveAVLatent:
         # Save purely as safetensors with no metadata
         safetensors.torch.save_file(output_dict, output_path)
 
-        return {"ui": {"text": f"Saved to {output_path}"}}
+        video_sync_latent_filename_prefix = ""
+        if video_filename_prefix:
+            video_sync_latent_filename_prefix = f"{video_filename_prefix}_ltnt_{counter:05d}"
+
+        return (video_sync_latent_filename_prefix, )
 
 
 def get_saved_latents():

@@ -165,9 +165,12 @@ Retrieves information from a combined `av_latent`, while also passing the origin
 ### Save video+audio latent (SaveAVLatent)
 Saves a video+audio latent to the ComfyUI output directory as a `.avlatent` safetensors file.
 
-- **Inputs**: `av_latent`, `filename_prefix`
+- **Inputs**: `av_latent`
 - **Parameters**:
   - `filename_prefix`: Output filename prefix, defaulting to `av_latents/latent` in ComfyUI `output` directory.
+  - `video_filename_prefix`: Video filename prefix to combine with the generated latent counter, to identify the related latent easier. When using it, the output video_sync_latent_filename_prefix should be connected to VHS filename_prefix.
+- **Outputs**:
+  - `video_sync_latent_filename_prefix`: Connect to VHS filename_prefix for adding the saved latent counter value to the filename of the video.
 
 ### Load video+audio latent (LoadAVLatent)
 Loads a previously saved `.avlatent` file. In contrast to other loaders that look for the latents in input/ folder only, this node loads from the ComfyUI output directory and sorts by newest first, thus enabling convenient roundtripping of saved latents.
