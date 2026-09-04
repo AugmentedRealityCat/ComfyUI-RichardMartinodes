@@ -5,6 +5,19 @@ import folder_paths
 import comfy.nested_tensor
 from .shared import CATEGORY
 
+class NoneLatent:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {}}
+
+    RETURN_TYPES = ("LATENT", )
+    RETURN_NAMES = ("latent", )
+    FUNCTION = "get_none"
+    CATEGORY = CATEGORY
+
+    def get_none(self):
+        return (None, )
+
 class SaveAVLatent:
     def __init__(self):
         self.output_dir = folder_paths.get_output_directory()
