@@ -96,6 +96,21 @@ The requested overlap duration is snapped to latent token counts using the same 
   - `audio_overlap_resolve`: How to handle the audio overlap ("crossfade", "av_latent_1", "av_latent_2").
 - **Outputs**: `av_latent`
 
+### Concatenate video+audio latents from folder (LatentFolderOverlappingConcatenator)
+Concatenates all video+audio latents in the given folder, applying overlapping logic (crossfade or simple join) similar to Concatenate media, but operating directly on latents instead of decoded video/audio.
+
+Currently supports MiniMax H3 only, but was developed with separated configurable parameters to port to other models if needed.
+
+The requested overlap duration is snapped to latent token counts using the same temporal compression rules as LatentAVMaskedExtender, so overlaps stay aligned with the model's token grid.
+
+- **Inputs**: `folder_path`: The path to scan for .avlatent files in ascending order
+- **Parameters**: 
+  - `video_fps`: Frame rate used to calculate synchronized video and audio token lengths.
+  - `overlap_duration_seconds`: Duration of the overlap/crossfade. `0` performs a plain concatenation.
+  - `video_overlap_resolve`: How to handle the video overlap ("crossfade", "av_latent_1", "av_latent_2").
+  - `audio_overlap_resolve`: How to handle the audio overlap ("crossfade", "av_latent_1", "av_latent_2").
+- **Outputs**: `av_latent`
+
 ### Extend video+audio latent (LatentAVMaskedExtender)
 Extends a combined video+audio latent by using the requested duration from the head (prepend_head mode) or tail (extend_tail mode) of a loaded latent and using the remaining portion of an empty latent for generation.
 

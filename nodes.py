@@ -7,7 +7,7 @@ from .martinodes.MediaTrimmer import MediaTrimmer
 from .martinodes.MediaOverlappingConcatenator import MediaOverlappingConcatenator
 from .martinodes.LatentAVMaskedExtender import LatentAVMaskedExtender
 from .martinodes.LatentAVLoadSave import NoneLatent, SaveAVLatent, LoadAVLatent
-from .martinodes.LatentOverlappingConcatenator import LatentOverlappingConcatenator
+from .martinodes.LatentOverlappingConcatenator import LatentOverlappingConcatenator, LatentFolderOverlappingConcatenator
 from .martinodes.LatentAVCombiner import LatentAVCombiner
 from .martinodes.LatentAVSplitter import LatentAVSplitter
 from .martinodes.LatentAVContrast import LatentAVContrast
@@ -25,6 +25,7 @@ NODE_CLASS_MAPPINGS = {
     "SaveAVLatent": SaveAVLatent,
     "LoadAVLatent": LoadAVLatent,
     "LatentOverlappingConcatenator": LatentOverlappingConcatenator,
+    "LatentFolderOverlappingConcatenator": LatentFolderOverlappingConcatenator,
     "LatentAVCombiner": LatentAVCombiner,
     "LatentAVSplitter": LatentAVSplitter,
     "LatentAVContrast": LatentAVContrast
@@ -43,6 +44,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveAVLatent": "Save video+audio latent",
     "LoadAVLatent": "Load video+audio latent",
     "LatentOverlappingConcatenator": "Concatenate video+audio latents",
+    "LatentFolderOverlappingConcatenator": "Concatenate video+audio latents from folder",
     "LatentAVCombiner": "Combine video+audio latent",
     "LatentAVSplitter": "Split video+audio latent",
     "LatentAVContrast": "Adjust video latent contrast"
